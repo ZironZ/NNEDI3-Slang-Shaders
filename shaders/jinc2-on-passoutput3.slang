@@ -107,7 +107,7 @@ void main()
       vec2 dx = vec2(1.0, 0.0);
       vec2 dy = vec2(0.0, 1.0);
 	  
-      vec2 pc = vTexCoord*params.OutputSize.xy;
+      vec2 pc = vTexCoord*(params.OutputSize.xy/2.0);
 
       vec2 tc = (floor(pc-vec2(0.5,0.5))+vec2(0.5,0.5));
      
@@ -116,9 +116,9 @@ void main()
       weights[2] = resampler(vec4(d(pc, tc    -dx    +dy), d(pc, tc           +dy), d(pc, tc    +dx    +dy), d(pc, tc+2.0*dx    +dy)));
       weights[3] = resampler(vec4(d(pc, tc    -dx+2.0*dy), d(pc, tc       +2.0*dy), d(pc, tc    +dx+2.0*dy), d(pc, tc+2.0*dx+2.0*dy)));
 
-      dx = dx * params.OutputSize.zw;
-      dy = dy * params.OutputSize.zw;
-      tc = tc * params.OutputSize.zw;
+      dx = dx * (params.OutputSize.zw*2.0);
+      dy = dy * (params.OutputSize.zw*2.0);
+      tc = tc * (params.OutputSize.zw*2.0);
 	 
      // reading the texels
      

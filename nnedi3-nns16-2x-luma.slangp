@@ -14,7 +14,7 @@ scale_x1 = 1.0
 scale_y1 = 2.0
 wrap_mode1 = "clamp_to_edge"
 
-shader2 = shaders/nnedi3-nns16-win8x4-pass1-luma.slang
+shader2 = shaders/nnedi3-nns16-win8x4-pass2-luma.slang
 filter_linear2 = false
 scale_type2 = source
 scale_x2 = 2.0
