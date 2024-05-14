@@ -1,7 +1,5 @@
 NNEDI3 is a neural network based image doubler. This is a port of [MPV's GLSL implementation](https://github.com/bjin/mpv-prescalers/tree/master) for use with the emulator front-end Retroarch.
 
-[Some examples of NNEDI3 scaling to 4x using 32 neurons in RGB](http://screenshotcomparison.com/comparison/204717/)
-
 # Usage
 
 Place the files in a folder in Retroarch\shaders\shaders_slang\. Make sure you are using the vulkan renderer in the Retroarch config.
