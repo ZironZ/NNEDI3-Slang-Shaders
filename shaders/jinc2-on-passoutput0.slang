@@ -34,7 +34,7 @@
 layout(push_constant) uniform Push
 {
 	vec4 SourceSize;
-	vec4 OriginalSize;
+	vec4 nnediPass0Size;
 	vec4 OutputSize;
 	uint FrameCount;
 	float JINC2_WINDOW_SINC;
@@ -79,7 +79,12 @@ vec3 max4(vec3 a, vec3 b, vec3 c, vec3 d)
 vec4 resampler(vec4 x)
 {
 	vec4 res;
-	res = (x==vec4(0.0, 0.0, 0.0, 0.0)) ?  vec4(wa*wb)  :  sin(x*wa)*sin(x*wb)/(x*x);
+
+   res.x = (x.x==0.0) ?  (wa*wb)  :  sin(x.x*wa)*sin(x.x*wb)/(x.x*x.x);
+   res.y = (x.y==0.0) ?  (wa*wb)  :  sin(x.y*wa)*sin(x.y*wb)/(x.y*x.y);
+   res.z = (x.z==0.0) ?  (wa*wb)  :  sin(x.z*wa)*sin(x.z*wb)/(x.z*x.z);
+   res.w = (x.w==0.0) ?  (wa*wb)  :  sin(x.w*wa)*sin(x.w*wb)/(x.w*x.w);
+   
 	return res;
 }
 
@@ -97,7 +102,7 @@ void main()
 #pragma stage fragment
 layout(location = 0) in vec2 vTexCoord;
 layout(location = 0) out vec4 FragColor;
-layout(set = 0, binding = 2) uniform sampler2D PassOutput0;
+layout(set = 0, binding = 2) uniform sampler2D nnediPass0;
 
 void main()
 {
@@ -107,7 +112,7 @@ void main()
       vec2 dx = vec2(1.0, 0.0);
       vec2 dy = vec2(0.0, 1.0);
 	  
-      vec2 pc = vTexCoord*params.OriginalSize.xy;
+      vec2 pc = vTexCoord*params.nnediPass0Size.xy;
 
       vec2 tc = (floor(pc-vec2(0.5,0.5))+vec2(0.5,0.5));
      
@@ -116,28 +121,28 @@ void main()
       weights[2] = resampler(vec4(d(pc, tc    -dx    +dy), d(pc, tc           +dy), d(pc, tc    +dx    +dy), d(pc, tc+2.0*dx    +dy)));
       weights[3] = resampler(vec4(d(pc, tc    -dx+2.0*dy), d(pc, tc       +2.0*dy), d(pc, tc    +dx+2.0*dy), d(pc, tc+2.0*dx+2.0*dy)));
 
-      dx = dx * params.OriginalSize.zw;
-      dy = dy * params.OriginalSize.zw;
-      tc = tc * params.OriginalSize.zw;
+      dx = dx * params.nnediPass0Size.zw;
+      dy = dy * params.nnediPass0Size.zw;
+      tc = tc * params.nnediPass0Size.zw;
 	 
      // reading the texels
      
-      vec3 c00 = texture(PassOutput0, tc    -dx    -dy).xyz;
-      vec3 c10 = texture(PassOutput0, tc           -dy).xyz;
-      vec3 c20 = texture(PassOutput0, tc    +dx    -dy).xyz;
-      vec3 c30 = texture(PassOutput0, tc+2.0*dx    -dy).xyz;
-      vec3 c01 = texture(PassOutput0, tc    -dx       ).xyz;
-      vec3 c11 = texture(PassOutput0, tc              ).xyz;
-      vec3 c21 = texture(PassOutput0, tc    +dx       ).xyz;
-      vec3 c31 = texture(PassOutput0, tc+2.0*dx       ).xyz;
-      vec3 c02 = texture(PassOutput0, tc    -dx    +dy).xyz;
-      vec3 c12 = texture(PassOutput0, tc           +dy).xyz;
-      vec3 c22 = texture(PassOutput0, tc    +dx    +dy).xyz;
-      vec3 c32 = texture(PassOutput0, tc+2.0*dx    +dy).xyz;
-      vec3 c03 = texture(PassOutput0, tc    -dx+2.0*dy).xyz;
-      vec3 c13 = texture(PassOutput0, tc       +2.0*dy).xyz;
-      vec3 c23 = texture(PassOutput0, tc    +dx+2.0*dy).xyz;
-      vec3 c33 = texture(PassOutput0, tc+2.0*dx+2.0*dy).xyz;
+      vec3 c00 = texture(nnediPass0, tc    -dx    -dy).xyz;
+      vec3 c10 = texture(nnediPass0, tc           -dy).xyz;
+      vec3 c20 = texture(nnediPass0, tc    +dx    -dy).xyz;
+      vec3 c30 = texture(nnediPass0, tc+2.0*dx    -dy).xyz;
+      vec3 c01 = texture(nnediPass0, tc    -dx       ).xyz;
+      vec3 c11 = texture(nnediPass0, tc              ).xyz;
+      vec3 c21 = texture(nnediPass0, tc    +dx       ).xyz;
+      vec3 c31 = texture(nnediPass0, tc+2.0*dx       ).xyz;
+      vec3 c02 = texture(nnediPass0, tc    -dx    +dy).xyz;
+      vec3 c12 = texture(nnediPass0, tc           +dy).xyz;
+      vec3 c22 = texture(nnediPass0, tc    +dx    +dy).xyz;
+      vec3 c32 = texture(nnediPass0, tc+2.0*dx    +dy).xyz;
+      vec3 c03 = texture(nnediPass0, tc    -dx+2.0*dy).xyz;
+      vec3 c13 = texture(nnediPass0, tc       +2.0*dy).xyz;
+      vec3 c23 = texture(nnediPass0, tc    +dx+2.0*dy).xyz;
+      vec3 c33 = texture(nnediPass0, tc+2.0*dx+2.0*dy).xyz;
 
       //  Get min/max samples
       vec3 min_sample = min4(c11, c21, c12, c22);
